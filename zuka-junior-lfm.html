@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZUKA's TOEFL Junior Quest — LFM Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --roblox-red: #e2231a;
+    --roblox-dark: #0a0a18;
+    --roblox-blue: #00a2ff;
+    --roblox-green: #00b06f;
+    --roblox-yellow: #ffcc00;
+    --roblox-purple: #8b5cf6;
+    --roblox-orange: #ff6b2b;
+    --xp-bar: #3ecf8e;
+    --card-bg: rgba(255,255,255,0.06);
+    --neon-cyan: #00e5ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--roblox-dark);
+    font-family: 'Nunito', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:'';
+    position:fixed;
+    top:0;left:0;right:0;bottom:0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(0,162,255,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(255,107,43,0.05) 0%, transparent 50%);
+    z-index:0;
+  }
+  body::after {
+    content:'';
+    position:fixed;
+    top:0;left:0;right:0;bottom:0;
+    background:
+      linear-gradient(rgba(0,162,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,162,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 25s linear infinite;
+    z-index:0;
+  }
+  @keyframes gridMove { 100% { transform: translate(60px,60px); } }
+
+  .particles { position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;pointer-events:none; }
+  .particle {
+    position:absolute;
+    border-radius:50%;
+    animation: floatUp linear infinite;
+    opacity:0.4;
+  }
+  @keyframes floatUp {
+    0% { transform:translateY(100vh) scale(0); opacity:0; }
+    10% { opacity:0.4; transform:translateY(90vh) scale(1); }
+    90% { opacity:0.4; }
+    100% { transform:translateY(-10vh) scale(0); opacity:0; }
+  }
+
+  .container { position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px; }
+
+  /* Boss Defeated Overlay */
+  .boss-overlay {
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background: rgba(0,0,0,0.9);
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    animation: overlayIn 0.5s both;
+  }
+  .boss-overlay.hidden { display:none; }
+  @keyframes overlayIn { from{opacity:0;} to{opacity:1;} }
+
+  .boss-defeated-icon {
+    font-size:90px;
+    animation: bossShake 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both;
+  }
+  @keyframes bossShake {
+    0% { transform:scale(0) rotate(-20deg); }
+    50% { transform:scale(1.2) rotate(5deg); }
+    100% { transform:scale(1) rotate(0); }
+  }
+  .boss-text {
+    font-family:'Fredoka One',cursive;
+    font-size:52px;
+    text-align:center;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--roblox-blue), var(--roblox-purple));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    animation: levelPulse 0.8s 0.2s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    line-height:1.1;
+  }
+  .boss-sub {
+    font-family:'Fredoka One',cursive;
+    font-size:20px;
+    color: var(--roblox-yellow);
+    animation: levelPulse 0.8s 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    margin-top:6px;
+  }
+  .boss-detail {
+    font-size:14px;
+    color:rgba(255,255,255,0.5);
+    animation: levelPulse 0.8s 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    margin-top:4px;
+  }
+  @keyframes levelPulse {
+    0% { transform:scale(0) rotate(-10deg); opacity:0; }
+    100% { transform:scale(1) rotate(0); opacity:1; }
+  }
+  .dismiss-btn {
+    margin-top:28px;
+    font-family:'Fredoka One',cursive;
+    font-size:16px;
+    background: linear-gradient(135deg, var(--roblox-purple), #6d28d9);
+    color:#fff;
+    border:none;
+    padding:14px 36px;
+    border-radius:14px;
+    cursor:pointer;
+    box-shadow: 0 5px 0 #4c1d95, 0 0 30px rgba(139,92,246,0.3);
+    animation: levelPulse 0.8s 0.7s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    transition: transform 0.1s;
+  }
+  .dismiss-btn:active { transform:translateY(4px); box-shadow:0 1px 0 #4c1d95; }
+
+  /* Banner */
+  .banner {
+    text-align:center;
+    padding:20px 20px 10px;
+    animation: dropIn 0.8s cubic-bezier(0.175,0.885,0.32,1.275) both;
+  }
+  @keyframes dropIn {
+    0% { transform:translateY(-80px) scale(0.5); opacity:0; }
+    100% { transform:translateY(0) scale(1); opacity:1; }
+  }
+  .game-title {
+    font-family:'Fredoka One',cursive;
+    font-size:12px;
+    color: var(--roblox-purple);
+    text-transform:uppercase;
+    letter-spacing:5px;
+    text-shadow:0 0 20px rgba(139,92,246,0.5);
+  }
+  .player-name {
+    font-family:'Fredoka One',cursive;
+    font-size:52px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--roblox-blue), var(--roblox-purple));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    filter: drop-shadow(0 4px 12px rgba(0,162,255,0.3));
+  }
+  .subtitle {
+    font-size:12px;
+    color:rgba(255,255,255,0.35);
+    letter-spacing:2px;
+  }
+  .level-up-tag {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background: linear-gradient(135deg, rgba(255,107,43,0.15), rgba(226,35,26,0.15));
+    border:1px solid rgba(255,107,43,0.3);
+    padding:5px 16px;
+    border-radius:20px;
+    font-family:'Fredoka One',cursive;
+    font-size:11px;
+    color:var(--roblox-orange);
+    margin-top:8px;
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+  @keyframes glowPulse {
+    0%,100% { box-shadow:0 0 10px rgba(255,107,43,0.1); }
+    50% { box-shadow:0 0 25px rgba(255,107,43,0.25); }
+  }
+
+  /* Main Score */
+  .score-hero {
+    text-align:center;
+    margin:20px 0;
+    animation: fadeIn 0.8s 0.3s both;
+  }
+  @keyframes fadeIn {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  .score-ring {
+    width:180px; height:180px;
+    margin:0 auto;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .score-ring svg {
+    position:absolute;
+    top:0;left:0;
+    width:100%;height:100%;
+    transform:rotate(-90deg);
+  }
+  .score-ring-bg { fill:none; stroke:rgba(255,255,255,0.06); stroke-width:8; }
+  .score-ring-fill {
+    fill:none;
+    stroke: url(#scoreGradient);
+    stroke-width:8;
+    stroke-linecap:round;
+    stroke-dasharray: 502;
+    stroke-dashoffset: 502;
+    animation: ringFill 2s 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  @keyframes ringFill { to { stroke-dashoffset: 84; } }
+  .score-inner {
+    text-align:center;
+    z-index:1;
+  }
+  .score-big {
+    font-family:'Fredoka One',cursive;
+    font-size:48px;
+    color:var(--xp-bar);
+    line-height:1;
+  }
+  .score-label {
+    font-size:12px;
+    color:rgba(255,255,255,0.4);
+    font-weight:800;
+  }
+  .score-fraction {
+    font-family:'Fredoka One',cursive;
+    font-size:16px;
+    color:rgba(255,255,255,0.6);
+  }
+
+  /* Stats row */
+  .stats-row {
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    margin:16px 0;
+    animation: fadeIn 0.8s 0.5s both;
+  }
+  .stat-card {
+    background:var(--card-bg);
+    border-radius:14px;
+    padding:14px 10px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.05);
+    position:relative;
+    overflow:hidden;
+  }
+  .stat-card::before {
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  }
+  .stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--roblox-purple), var(--roblox-blue)); }
+  .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--roblox-green), var(--xp-bar)); }
+  .stat-card:nth-child(3)::before { background: linear-gradient(90deg, var(--roblox-orange), var(--roblox-yellow)); }
+  .stat-icon { font-size:24px; margin-bottom:2px; }
+  .stat-value { font-family:'Fredoka One',cursive; font-size:24px; line-height:1.1; }
+  .stat-label { font-size:10px; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:1px; font-weight:800; }
+  .blue { color:var(--roblox-blue); }
+  .green { color:var(--xp-bar); }
+  .yellow { color:var(--roblox-yellow); }
+  .orange { color:var(--roblox-orange); }
+  .purple { color:var(--roblox-purple); }
+  .cyan { color:var(--neon-cyan); }
+
+  /* Comparison Banner */
+  .compare-banner {
+    background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(0,162,255,0.1));
+    border:1px solid rgba(139,92,246,0.2);
+    border-radius:16px;
+    padding:16px;
+    margin:16px 0;
+    animation: fadeIn 0.8s 0.6s both;
+  }
+  .compare-title {
+    font-family:'Fredoka One',cursive;
+    font-size:13px;
+    color:var(--roblox-purple);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .compare-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .compare-item {
+    background:rgba(255,255,255,0.04);
+    border-radius:10px;
+    padding:12px;
+    text-align:center;
+  }
+  .compare-label { font-size:10px; color:rgba(255,255,255,0.35); font-weight:800; text-transform:uppercase; letter-spacing:1px; }
+  .compare-value { font-family:'Fredoka One',cursive; font-size:20px; margin:4px 0; }
+  .compare-desc { font-size:10px; color:rgba(255,255,255,0.3); }
+  .compare-bar {
+    height:6px;
+    background:rgba(255,255,255,0.06);
+    border-radius:3px;
+    margin-top:6px;
+    overflow:hidden;
+  }
+  .compare-bar-fill {
+    height:100%;
+    border-radius:3px;
+    animation: miniGrow 1.5s 1s cubic-bezier(0.4,0,0.2,1) forwards;
+    width:0%;
+  }
+  @keyframes miniGrow { to { width: var(--w); } }
+
+  /* Question Grid */
+  .questions-section {
+    margin:16px 0;
+    animation: fadeIn 0.8s 0.7s both;
+  }
+  .section-title {
+    font-family:'Fredoka One',cursive;
+    font-size:15px;
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .q-grid {
+    display:grid;
+    grid-template-columns:repeat(14,1fr);
+    gap:4px;
+    margin-bottom:16px;
+  }
+  .q-cell {
+    aspect-ratio:1;
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fredoka One',cursive;
+    font-size:10px;
+    transition:transform 0.2s;
+    cursor:default;
+    position:relative;
+  }
+  .q-cell:hover { transform:scale(1.3); z-index:2; }
+  .q-correct {
+    background: rgba(62,207,142,0.2);
+    color: var(--xp-bar);
+    border:1px solid rgba(62,207,142,0.3);
+  }
+  .q-wrong {
+    background: rgba(255,107,43,0.25);
+    color: var(--roblox-orange);
+    border:1px solid rgba(255,107,43,0.4);
+    animation: wrongPulse 2s ease-in-out infinite;
+  }
+  @keyframes wrongPulse {
+    0%,100% { box-shadow:0 0 4px rgba(255,107,43,0.2); }
+    50% { box-shadow:0 0 12px rgba(255,107,43,0.4); }
+  }
+
+  /* Mistakes */
+  .mistakes-title {
+    font-family:'Fredoka One',cursive;
+    font-size:14px;
+    color:var(--roblox-orange);
+    margin:14px 0 8px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .mistake-card {
+    background:rgba(255,107,43,0.06);
+    border:1px solid rgba(255,107,43,0.12);
+    border-radius:10px;
+    padding:10px 12px;
+    margin-bottom:5px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    transition:transform 0.2s;
+  }
+  .mistake-card:hover { transform:translateX(3px); }
+  .mistake-num {
+    background:var(--roblox-orange);
+    color:#fff;
+    font-family:'Fredoka One',cursive;
+    font-size:11px;
+    min-width:30px; height:28px;
+    border-radius:7px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .mistake-detail { flex:1; }
+  .mistake-answers { font-size:12px; }
+  .wrong { color:#ff6b6b; }
+  .correct { color:var(--xp-bar); }
+
+  /* XP Bar */
+  .xp-section {
+    margin:18px 0;
+    animation: fadeIn 0.8s 0.8s both;
+  }
+  .xp-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:5px;
+  }
+  .xp-title { font-family:'Fredoka One',cursive; font-size:14px; color:var(--roblox-yellow); }
+  .xp-amount { font-family:'Fredoka One',cursive; font-size:14px; color:var(--xp-bar); }
+  .xp-bar-container {
+    height:22px;
+    background:rgba(255,255,255,0.06);
+    border-radius:11px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .xp-bar-fill {
+    height:100%;
+    background: linear-gradient(90deg, var(--roblox-purple), var(--roblox-blue), var(--neon-cyan));
+    border-radius:11px;
+    width:0%;
+    animation: fillXP 2.5s 1.2s cubic-bezier(0.4,0,0.2,1) forwards;
+    position:relative;
+    box-shadow:0 0 15px rgba(0,229,255,0.3);
+  }
+  @keyframes fillXP { to { width:83.3%; } }
+  .xp-bar-fill::after {
+    content:'';position:absolute;top:0;left:0;right:0;height:50%;
+    background:linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
+    border-radius:11px 11px 0 0;
+  }
+  .xp-footer {
+    display:flex;justify-content:space-between;margin-top:5px;align-items:center;
+  }
+  .level-badge {
+    display:inline-flex;align-items:center;gap:5px;
+    background: linear-gradient(135deg, var(--roblox-purple), #6d28d9);
+    padding:4px 12px;border-radius:16px;
+    font-family:'Fredoka One',cursive;font-size:12px;
+    box-shadow:0 0 12px rgba(139,92,246,0.3);
+  }
+  .level-hint { font-size:10px; color:rgba(255,255,255,0.3); }
+
+  /* Badges */
+  .badges-grid {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin:12px 0;
+    animation: fadeIn 0.8s 0.9s both;
+  }
+  .badge-item {
+    background:var(--card-bg);
+    border-radius:12px;
+    padding:12px 6px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.04);
+    transition:transform 0.3s;
+    animation: badgePop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+  }
+  .badge-item:hover { transform:translateY(-4px) rotate(-2deg); }
+  @keyframes badgePop {
+    from { opacity:0; transform:scale(0) rotate(-15deg); }
+    to { opacity:1; transform:scale(1) rotate(0); }
+  }
+  .badge-icon { font-size:30px; display:block; margin-bottom:3px; }
+  .badge-name { font-family:'Fredoka One',cursive; font-size:10px; color:var(--roblox-yellow); }
+  .badge-desc { font-size:8px; color:rgba(255,255,255,0.3); margin-top:2px; }
+
+  /* CTA */
+  .cta-section {
+    text-align:center;
+    margin:22px 0 16px;
+    animation: fadeIn 0.8s 1.2s both;
+  }
+  .cta-text {
+    font-family:'Fredoka One',cursive;
+    font-size:14px;
+    color:rgba(255,255,255,0.5);
+    margin-bottom:8px;
+  }
+  .next-quest-btn {
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'Fredoka One',cursive;font-size:16px;
+    background: linear-gradient(135deg, var(--roblox-blue), var(--neon-cyan));
+    color:#fff;
+    border:none;
+    padding:14px 32px;
+    border-radius:14px;
+    cursor:pointer;
+    box-shadow:0 5px 0 #0077b3, 0 0 30px rgba(0,162,255,0.2);
+    transition:transform 0.1s;
+  }
+  .next-quest-btn:active { transform:translateY(4px); box-shadow:0 1px 0 #0077b3; }
+
+  /* Progress tracker */
+  .progress-tracker {
+    margin:16px 0;
+    animation: fadeIn 0.8s 1s both;
+  }
+  .progress-title {
+    font-family:'Fredoka One',cursive;
+    font-size:13px;
+    color:rgba(255,255,255,0.4);
+    margin-bottom:8px;
+  }
+  .progress-steps {
+    display:flex;
+    gap:6px;
+    align-items:center;
+  }
+  .progress-step {
+    flex:1;
+    height:38px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fredoka One',cursive;
+    font-size:10px;
+    position:relative;
+  }
+  .step-done {
+    background: rgba(62,207,142,0.15);
+    border:1px solid rgba(62,207,142,0.3);
+    color:var(--xp-bar);
+  }
+  .step-current {
+    background: rgba(139,92,246,0.2);
+    border:2px solid rgba(139,92,246,0.5);
+    color:var(--roblox-purple);
+    box-shadow:0 0 15px rgba(139,92,246,0.2);
+  }
+  .step-locked {
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.06);
+    color:rgba(255,255,255,0.2);
+  }
+  .step-arrow {
+    color:rgba(255,255,255,0.15);
+    font-size:14px;
+    flex-shrink:0;
+  }
+
+  /* Confetti */
+  .confetti-piece {
+    position:fixed;top:-10px;z-index:200;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform:translateY(0) rotate(0deg); opacity:1; }
+    100% { transform:translateY(100vh) rotate(720deg); opacity:0; }
+  }
+
+  @media (max-width:600px) {
+    .player-name { font-size:38px; }
+    .stats-row { grid-template-columns:1fr; }
+    .q-grid { grid-template-columns:repeat(7,1fr); }
+    .badges-grid { grid-template-columns:repeat(2,1fr); }
+    .boss-text { font-size:36px; }
+    .compare-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Boss Defeated Overlay -->
+<div class="boss-overlay" id="bossOverlay">
+  <div class="boss-defeated-icon">⚔️🧠⚔️</div>
+  <div class="boss-text">BOSS LEVEL<br>CLEARED!</div>
+  <div class="boss-sub">Grade VII-X Challenge Defeated</div>
+  <div class="boss-detail">A Grade V warrior conquering Grade VII-X territory</div>
+  <button class="dismiss-btn" onclick="document.getElementById('bossOverlay').classList.add('hidden')">
+    SEE MY BATTLE STATS →
+  </button>
+</div>
+
+<div class="particles" id="particles"></div>
+
+<div class="container">
+  <div class="banner">
+    <div class="game-title">⚔️ TOEFL Junior Quest · Boss Level</div>
+    <div class="player-name">ZUKA</div>
+    <div class="subtitle">TOEFL JUNIOR · PART 2: LANGUAGE FORM & MEANING</div>
+    <div class="level-up-tag">🔥 GRADE V PLAYER vs GRADE VII-X TEST</div>
+  </div>
+
+  <!-- Score Ring -->
+  <div class="score-hero">
+    <div class="score-ring">
+      <svg viewBox="0 0 180 180">
+        <defs>
+          <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#8b5cf6"/>
+            <stop offset="50%" style="stop-color:#00a2ff"/>
+            <stop offset="100%" style="stop-color:#00e5ff"/>
+          </linearGradient>
+        </defs>
+        <circle class="score-ring-bg" cx="90" cy="90" r="80"/>
+        <circle class="score-ring-fill" cx="90" cy="90" r="80"/>
+      </svg>
+      <div class="score-inner">
+        <div class="score-big">83.3%</div>
+        <div class="score-fraction">35/42</div>
+        <div class="score-label">CORRECT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value green">35</div>
+      <div class="stat-label">Correct</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⏱️</div>
+      <div class="stat-value cyan">22:54</div>
+      <div class="stat-label">Time</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-value purple">7</div>
+      <div class="stat-label">Mistakes</div>
+    </div>
+  </div>
+
+  <!-- Comparison -->
+  <div class="compare-banner">
+    <div class="compare-title">📊 ZUKA vs GLOBAL AVERAGE (ETS 2022-2024 Data)</div>
+    <div class="compare-grid">
+      <div class="compare-item">
+        <div class="compare-label">Zuka (Grade V)</div>
+        <div class="compare-value green">83.3%</div>
+        <div class="compare-desc">35/42 correct</div>
+        <div class="compare-bar"><div class="compare-bar-fill" style="--w:83.3%;background:linear-gradient(90deg,var(--roblox-purple),var(--neon-cyan));"></div></div>
+      </div>
+      <div class="compare-item">
+        <div class="compare-label">Global Avg (Grade VII-X)</div>
+        <div class="compare-value" style="color:rgba(255,255,255,0.5);">~60-65%</div>
+        <div class="compare-desc">Mean scaled 252.3/300</div>
+        <div class="compare-bar"><div class="compare-bar-fill" style="--w:62%;background:rgba(255,255,255,0.2);"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question Grid -->
+  <div class="questions-section">
+    <div class="section-title" style="color:var(--neon-cyan);">🗺️ Battle Map — 42 Questions</div>
+    <div class="q-grid" id="qGrid"></div>
+  </div>
+
+  <!-- Mistakes -->
+  <div class="mistakes-title">🔧 Level Up Tips (7 misses)</div>
+  <div class="mistake-card">
+    <div class="mistake-num">#1</div>
+    <div class="mistake-detail">
+      <div class="mistake-answers"><span class="wrong">A</span> → <span class="correct">D</span></div>
+    </div>
+  </div>
+  <div class="mistake-card">
+    <div class="mistake-num">#6</div>
+    <div class="mistake-detail">
+      <div class="mistake-answers"><span class="wrong">C</span> → <span class="correct">D</span></div>
+    </div>
+  </div>
+  <div class="mistake-card">
+    <div class="mistake-num">#18</div>
+    <div class="mistake-detail">
+      <div class="mistake-answers"><span class="wrong">B</span> → <span class="correct">C</span></div>
+    </div>
+  </div>
+  <div class="mistake-card">
+    <div class="mistake-num">#19</div>
+    <div class="mistake-detail">
+      <div class="mistake-answers"><span class="wrong">D</span> → <span class="correct">B</span></div>
+    </div>
+  </div>
+  <div class="mistake-card">
+    <div class="mistake-num">#29</div>
+    <div class="mistake-detail">
+      <div class="mistake-answers"><span class="wrong">C</span> → <span class="correct">A</span></div>
+    </div>
+  </div>
+  <div class="mistake-card">
+    <div class="mistake-num">#32</div>
+    <div class="mistake-detail">
+      <div class="mistake-answers"><span class="wrong">A</span> → <span class="correct">C</span></div>
+    </div>
+  </div>
+  <div class="mistake-card">
+    <div class="mistake-num">#34</div>
+    <div class="mistake-detail">
+      <div class="mistake-answers"><span class="wrong">B</span> → <span class="correct">C</span></div>
+    </div>
+  </div>
+
+  <!-- XP -->
+  <div class="xp-section">
+    <div class="xp-header">
+      <span class="xp-title">⚡ XP EARNED</span>
+      <span class="xp-amount">+350 XP (×1.5 Boss Bonus!)</span>
+    </div>
+    <div class="xp-bar-container">
+      <div class="xp-bar-fill"></div>
+    </div>
+    <div class="xp-footer">
+      <span class="level-badge">🎮 LVL 3 — English Knight</span>
+      <span class="level-hint">+150 bonus XP for fighting above your level!</span>
+    </div>
+  </div>
+
+  <!-- Badges -->
+  <div class="badges-grid">
+    <div class="badge-item" style="animation-delay:0.3s;">
+      <span class="badge-icon">⚔️</span>
+      <div class="badge-name">Boss Slayer</div>
+      <div class="badge-desc">Beat VII-X test as Grade V</div>
+    </div>
+    <div class="badge-item" style="animation-delay:0.5s;">
+      <span class="badge-icon">🧠</span>
+      <div class="badge-name">Grammar Knight</div>
+      <div class="badge-desc">80%+ on LFM section</div>
+    </div>
+    <div class="badge-item" style="animation-delay:0.7s;">
+      <span class="badge-icon">⚡</span>
+      <div class="badge-name">Speed Runner</div>
+      <div class="badge-desc">Under 25 min!</div>
+    </div>
+    <div class="badge-item" style="animation-delay:0.9s;">
+      <span class="badge-icon">🔥</span>
+      <div class="badge-name">Above Average</div>
+      <div class="badge-desc">Beat global avg by 20%+</div>
+    </div>
+  </div>
+
+  <!-- Progress Tracker -->
+  <div class="progress-tracker">
+    <div class="progress-title">📋 TOEFL JUNIOR QUEST PROGRESS</div>
+    <div class="progress-steps">
+      <div class="progress-step step-done">✅ Part 1<br><span style="font-size:8px;opacity:0.6;">Listening</span></div>
+      <span class="step-arrow">›</span>
+      <div class="progress-step step-current">⚔️ Part 2<br><span style="font-size:8px;opacity:0.6;">LFM · 83.3%</span></div>
+      <span class="step-arrow">›</span>
+      <div class="progress-step step-locked">🔒 Part 3<br><span style="font-size:8px;opacity:0.6;">Reading</span></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-text">1 section remaining to complete TOEFL Junior!</div>
+    <button class="next-quest-btn" onclick="void(0)">
+      📖 NEXT: READING COMPREHENSION →
+    </button>
+  </div>
+</div>
+
+<script>
+  // Particles
+  const particlesEl = document.getElementById('particles');
+  const colors = ['#00a2ff','#8b5cf6','#00e5ff','#3ecf8e','#ffcc00','#ff6b2b'];
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100+'%';
+    p.style.width = p.style.height = (Math.random()*4+2)+'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (Math.random()*10+8)+'s';
+    p.style.animationDelay = (Math.random()*12)+'s';
+    particlesEl.appendChild(p);
+  }
+
+  // Question Grid
+  const wrongQs = [1,6,18,19,29,32,34];
+  const grid = document.getElementById('qGrid');
+  for (let i = 1; i <= 42; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'q-cell ' + (wrongQs.includes(i) ? 'q-wrong' : 'q-correct');
+    cell.textContent = i;
+    cell.style.animationDelay = (i * 0.03) + 's';
+    grid.appendChild(cell);
+  }
+
+  // Confetti
+  setTimeout(() => {
+    for (let i = 0; i < 60; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random()*100+'%';
+      c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration = (Math.random()*2+1.5)+'s';
+      c.style.animationDelay = (Math.random()*0.5)+'s';
+      c.style.borderRadius = Math.random()>0.5?'50%':'2px';
+      c.style.width = (Math.random()*7+4)+'px';
+      c.style.height = (Math.random()*7+4)+'px';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }
+  }, 300);
+</script>
+</body>
+</html>

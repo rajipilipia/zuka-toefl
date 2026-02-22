@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZUKA's TOEFL Quest Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --roblox-red: #e2231a;
+    --roblox-dark: #1a1a2e;
+    --roblox-blue: #00a2ff;
+    --roblox-green: #00b06f;
+    --roblox-yellow: #ffcc00;
+    --roblox-purple: #8b5cf6;
+    --roblox-orange: #ff6b2b;
+    --xp-bar: #3ecf8e;
+    --card-bg: rgba(255,255,255,0.07);
+    --glow-blue: 0 0 30px rgba(0,162,255,0.4);
+    --glow-green: 0 0 30px rgba(62,207,142,0.4);
+    --glow-yellow: 0 0 30px rgba(255,204,0,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--roblox-dark);
+    font-family: 'Nunito', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      linear-gradient(rgba(0,162,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,162,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(50px,50px); }
+  }
+
+  /* Floating particles */
+  .particles {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: floatUp linear infinite;
+    opacity: 0.6;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg) scale(0); opacity: 0; }
+    10% { opacity: 0.6; scale: 1; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-10vh) rotate(720deg) scale(0); opacity: 0; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Top banner */
+  .banner {
+    text-align: center;
+    padding: 30px 20px 20px;
+    animation: dropIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  @keyframes dropIn {
+    0% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  .game-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    color: var(--roblox-blue);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+    text-shadow: 0 0 20px rgba(0,162,255,0.5);
+  }
+
+  .player-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 52px;
+    background: linear-gradient(135deg, var(--roblox-yellow), var(--roblox-orange), var(--roblox-red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 4px 8px rgba(255,107,43,0.3));
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 5px;
+    letter-spacing: 2px;
+  }
+
+  /* Avatar section */
+  .avatar-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin: 25px 0;
+    animation: fadeIn 1s 0.3s both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .avatar-box {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, var(--roblox-blue), var(--roblox-purple));
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    box-shadow: var(--glow-blue), inset 0 -4px 0 rgba(0,0,0,0.2);
+    position: relative;
+    animation: avatarBounce 3s ease-in-out infinite;
+  }
+
+  @keyframes avatarBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .avatar-box::after {
+    content: '⭐';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 28px;
+    animation: spin 4s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+
+  .score-display {
+    text-align: center;
+  }
+
+  .score-big {
+    font-family: 'Fredoka One', cursive;
+    font-size: 72px;
+    color: var(--xp-bar);
+    text-shadow: 0 0 40px rgba(62,207,142,0.5);
+    line-height: 1;
+  }
+
+  .score-label {
+    font-size: 16px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .score-percent {
+    font-family: 'Fredoka One', cursive;
+    font-size: 28px;
+    color: var(--roblox-yellow);
+    text-shadow: 0 0 20px rgba(255,204,0,0.4);
+  }
+
+  /* XP Bar */
+  .xp-section {
+    margin: 20px 0;
+    animation: fadeIn 1s 0.5s both;
+  }
+
+  .xp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .xp-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    color: var(--roblox-yellow);
+  }
+
+  .xp-amount {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    color: var(--xp-bar);
+  }
+
+  .xp-bar-container {
+    height: 28px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--roblox-green), var(--xp-bar), var(--roblox-yellow));
+    border-radius: 14px;
+    width: 0%;
+    animation: fillBar 2s 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    position: relative;
+    box-shadow: 0 0 20px rgba(62,207,142,0.5);
+  }
+
+  @keyframes fillBar {
+    0% { width: 0%; }
+    100% { width: 90.7%; }
+  }
+
+  .xp-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+    border-radius: 14px 14px 0 0;
+  }
+
+  .level-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--roblox-purple), #6d28d9);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 14px;
+    box-shadow: 0 0 15px rgba(139,92,246,0.4);
+    margin-top: 8px;
+  }
+
+  /* Exercise cards */
+  .exercises-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .exercise-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 16px;
+    border: 2px solid rgba(255,255,255,0.08);
+    animation: cardSlide 0.6s both;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exercise-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .exercise-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .exercise-card:nth-child(1) { animation-delay: 0.6s; }
+  .exercise-card:nth-child(1)::before { background: var(--roblox-blue); }
+  .exercise-card:nth-child(2) { animation-delay: 0.7s; }
+  .exercise-card:nth-child(2)::before { background: var(--roblox-purple); }
+  .exercise-card:nth-child(3) { animation-delay: 0.8s; }
+  .exercise-card:nth-child(3)::before { background: var(--roblox-green); }
+  .exercise-card:nth-child(4) { animation-delay: 0.9s; }
+  .exercise-card:nth-child(4)::before { background: var(--roblox-orange); }
+  .exercise-card:nth-child(5) { animation-delay: 1s; }
+  .exercise-card:nth-child(5)::before { background: var(--roblox-yellow); }
+
+  @keyframes cardSlide {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+  }
+
+  .card-score {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+  }
+
+  .perfect { color: var(--xp-bar); }
+  .great { color: var(--roblox-yellow); }
+  .good { color: var(--roblox-orange); }
+
+  .card-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+  }
+
+  .mini-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .mini-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    animation: miniGrow 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    width: 0%;
+  }
+
+  @keyframes miniGrow {
+    to { width: var(--target-width); }
+  }
+
+  .mini-bar-fill.perfect-fill { background: linear-gradient(90deg, var(--roblox-green), var(--xp-bar)); }
+  .mini-bar-fill.great-fill { background: linear-gradient(90deg, var(--roblox-green), var(--roblox-yellow)); }
+  .mini-bar-fill.good-fill { background: linear-gradient(90deg, var(--roblox-orange), var(--roblox-yellow)); }
+
+  .stars {
+    margin-top: 6px;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  /* Mistakes section */
+  .mistakes-section {
+    margin: 20px 0;
+    animation: fadeIn 1s 1.2s both;
+  }
+
+  .mistakes-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: var(--roblox-orange);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mistake-card {
+    background: rgba(255,107,43,0.08);
+    border: 1px solid rgba(255,107,43,0.2);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: transform 0.2s;
+  }
+
+  .mistake-card:hover {
+    transform: translateX(4px);
+  }
+
+  .mistake-num {
+    background: var(--roblox-orange);
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .mistake-detail {
+    flex: 1;
+  }
+
+  .mistake-q {
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+
+  .mistake-answer {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .wrong { color: #ff6b6b; }
+  .correct { color: var(--xp-bar); }
+
+  /* Badges section */
+  .badges-section {
+    margin: 25px 0;
+    animation: fadeIn 1s 1.4s both;
+  }
+
+  .badges-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    color: var(--roblox-yellow);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .badges-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .badge-item {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 16px 10px;
+    text-align: center;
+    border: 2px solid rgba(255,255,255,0.06);
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: badgePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  .badge-item:nth-child(1) { animation-delay: 1.6s; }
+  .badge-item:nth-child(2) { animation-delay: 1.8s; }
+  .badge-item:nth-child(3) { animation-delay: 2s; }
+
+  .badge-item:hover {
+    transform: translateY(-6px) rotate(-2deg);
+    box-shadow: var(--glow-yellow);
+  }
+
+  @keyframes badgePop {
+    from { opacity: 0; transform: scale(0) rotate(-20deg); }
+    to { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .badge-icon {
+    font-size: 40px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .badge-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 13px;
+    color: var(--roblox-yellow);
+  }
+
+  .badge-desc {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 3px;
+  }
+
+  /* Bottom CTA */
+  .cta-section {
+    text-align: center;
+    margin: 30px 0 20px;
+    animation: fadeIn 1s 2.2s both;
+  }
+
+  .next-quest-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--roblox-green), #00d084);
+    border: none;
+    padding: 16px 48px;
+    border-radius: 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #008f52, 0 8px 30px rgba(0,176,111,0.4);
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .next-quest-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #008f52, 0 12px 40px rgba(0,176,111,0.5);
+  }
+
+  .next-quest-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #008f52;
+  }
+
+  .next-quest-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  .quest-hint {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 12px;
+  }
+
+  /* Speed bonus */
+  .speed-bonus {
+    background: linear-gradient(135deg, rgba(255,204,0,0.1), rgba(255,107,43,0.1));
+    border: 1px solid rgba(255,204,0,0.2);
+    border-radius: 14px;
+    padding: 14px 20px;
+    text-align: center;
+    margin: 15px 0;
+    animation: fadeIn 1s 0.7s both;
+  }
+
+  .speed-icon { font-size: 28px; }
+
+  .speed-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px;
+    color: var(--roblox-yellow);
+  }
+
+  .speed-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+  }
+
+  /* Rank badge */
+  .rank-section {
+    text-align: center;
+    margin: 15px 0;
+    animation: fadeIn 1s 0.9s both;
+  }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(255,204,0,0.15), rgba(255,107,43,0.15));
+    border: 2px solid rgba(255,204,0,0.3);
+    padding: 12px 28px;
+    border-radius: 50px;
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255,204,0,0.2); }
+    50% { box-shadow: 0 0 40px rgba(255,204,0,0.4); }
+  }
+
+  .rank-icon { font-size: 32px; }
+
+  .rank-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px;
+    background: linear-gradient(135deg, var(--roblox-yellow), var(--roblox-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Confetti animation on load */
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: confettiFall linear forwards;
+    z-index: 10;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .exercise-card.full-width {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 600px) {
+    .player-name { font-size: 36px; }
+    .score-big { font-size: 52px; }
+    .exercises-grid { grid-template-columns: 1fr; }
+    .badges-grid { grid-template-columns: repeat(3, 1fr); }
+    .avatar-section { flex-direction: column; gap: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container">
+  <!-- Banner -->
+  <div class="banner">
+    <div class="game-title">📖 TOEFL Quest · Reading Mission</div>
+    <div class="player-name">ZUKA</div>
+    <div class="subtitle">MOCK 2 · GRADE 5-6 · READING TEST</div>
+  </div>
+
+  <!-- Avatar + Score -->
+  <div class="avatar-section">
+    <div class="avatar-box">🧑‍🎓</div>
+    <div class="score-display">
+      <div class="score-big">39/43</div>
+      <div class="score-label">Correct Answers</div>
+      <div class="score-percent">90.7%</div>
+    </div>
+  </div>
+
+  <!-- Speed Bonus -->
+  <div class="speed-bonus">
+    <span class="speed-icon">⚡</span>
+    <div class="speed-text">SPEED BONUS! 11 Minutes</div>
+    <div class="speed-sub">Completed faster than 95% of players</div>
+  </div>
+
+  <!-- Rank -->
+  <div class="rank-section">
+    <div class="rank-badge">
+      <span class="rank-icon">🏆</span>
+      <span class="rank-text">RANK: ELITE READER</span>
+    </div>
+  </div>
+
+  <!-- XP Bar -->
+  <div class="xp-section">
+    <div class="xp-header">
+      <span class="xp-title">⚡ XP EARNED</span>
+      <span class="xp-amount">+390 XP</span>
+    </div>
+    <div class="xp-bar-container">
+      <div class="xp-bar-fill"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;">
+      <span class="level-badge">🎮 LVL 1 — English Explorer</span>
+      <span style="font-size:12px;color:rgba(255,255,255,0.4);">Next: LVL 2 at 500 XP</span>
+    </div>
+  </div>
+
+  <!-- Exercise Cards -->
+  <div class="exercises-grid">
+    <div class="exercise-card">
+      <div class="card-header">
+        <span class="card-title">📸 Ex 1: Pictures</span>
+        <span class="card-score great">6/7</span>
+      </div>
+      <div class="card-desc">Match pictures with words</div>
+      <div class="mini-bar">
+        <div class="mini-bar-fill great-fill" style="--target-width:85.7%;animation-delay:1.5s;"></div>
+      </div>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+    </div>
+
+    <div class="exercise-card">
+      <div class="card-header">
+        <span class="card-title">📚 Ex 2: Vocabulary</span>
+        <span class="card-score great">11/13</span>
+      </div>
+      <div class="card-desc">Word definitions</div>
+      <div class="mini-bar">
+        <div class="mini-bar-fill great-fill" style="--target-width:84.6%;animation-delay:1.7s;"></div>
+      </div>
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+    </div>
+
+    <div class="exercise-card">
+      <div class="card-header">
+        <span class="card-title">💬 Ex 3: Grammar</span>
+        <span class="card-score perfect">7/7</span>
+      </div>
+      <div class="card-desc">Conversation responses</div>
+      <div class="mini-bar">
+        <div class="mini-bar-fill perfect-fill" style="--target-width:100%;animation-delay:1.9s;"></div>
+      </div>
+      <div class="stars">⭐⭐⭐⭐⭐ 💎</div>
+    </div>
+
+    <div class="exercise-card">
+      <div class="card-header">
+        <span class="card-title">📖 Ex 4: Story</span>
+        <span class="card-score perfect">11/11</span>
+      </div>
+      <div class="card-desc">"Jim Wants to Make a Cake"</div>
+      <div class="mini-bar">
+        <div class="mini-bar-fill perfect-fill" style="--target-width:100%;animation-delay:2.1s;"></div>
+      </div>
+      <div class="stars">⭐⭐⭐⭐⭐ 💎</div>
+    </div>
+
+    <div class="exercise-card full-width">
+      <div class="card-header">
+        <span class="card-title">🎭 Ex 5: Article</span>
+        <span class="card-score good">4/5</span>
+      </div>
+      <div class="card-desc">"An Actor Prepares"</div>
+      <div class="mini-bar">
+        <div class="mini-bar-fill great-fill" style="--target-width:80%;animation-delay:2.3s;"></div>
+      </div>
+      <div class="stars">⭐⭐⭐⭐</div>
+    </div>
+  </div>
+
+  <!-- Mistakes -->
+  <div class="mistakes-section">
+    <div class="mistakes-title">🔧 Level Up Tips — 4 Mistakes to Fix</div>
+
+    <div class="mistake-card">
+      <div class="mistake-num">#7</div>
+      <div class="mistake-detail">
+        <div class="mistake-q">Picture: Car scene</div>
+        <div class="mistake-answer">
+          <span class="wrong">Your answer: C</span> → <span class="correct">Correct: B (loud horn)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mistake-card">
+      <div class="mistake-num">#13</div>
+      <div class="mistake-detail">
+        <div class="mistake-q">"Very great extent or quantity; immense"</div>
+        <div class="mistake-answer">
+          <span class="wrong">Your answer: A (Wide)</span> → <span class="correct">Correct: C (Vast)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mistake-card">
+      <div class="mistake-num">#18</div>
+      <div class="mistake-detail">
+        <div class="mistake-q">"A thick group of small trees, shrubs..."</div>
+        <div class="mistake-answer">
+          <span class="wrong">Your answer: B (Brussels)</span> → <span class="correct">Correct: C (Greenery)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mistake-card">
+      <div class="mistake-num">#43</div>
+      <div class="mistake-detail">
+        <div class="mistake-q">"According to the article..."</div>
+        <div class="mistake-answer">
+          <span class="wrong">Your answer: A (often plays old woman)</span> → <span class="correct">Correct: C (costumes help)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Badges -->
+  <div class="badges-section">
+    <div class="badges-title">🏅 Badges Earned</div>
+    <div class="badges-grid">
+      <div class="badge-item">
+        <span class="badge-icon">💎</span>
+        <div class="badge-name">Perfect Run x2</div>
+        <div class="badge-desc">100% on Ex 3 & Ex 4</div>
+      </div>
+      <div class="badge-item">
+        <span class="badge-icon">⚡</span>
+        <div class="badge-name">Speed Demon</div>
+        <div class="badge-desc">Finished in 11 min</div>
+      </div>
+      <div class="badge-item">
+        <span class="badge-icon">🧠</span>
+        <div class="badge-name">90% Club</div>
+        <div class="badge-desc">Elite accuracy</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <button class="next-quest-btn" onclick="this.textContent='🎧 LISTENING QUEST LOADING...'">
+      🎯 NEXT QUEST: LISTENING
+    </button>
+    <div class="quest-hint">Complete Listening to unlock LVL 2 and earn the <b>Full Test Master</b> badge!</div>
+  </div>
+</div>
+
+<script>
+  // Create floating particles
+  const particlesEl = document.getElementById('particles');
+  const colors = ['#00a2ff', '#ff6b2b', '#ffcc00', '#00b06f', '#8b5cf6', '#e2231a'];
+  
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.width = p.style.height = (Math.random() * 6 + 3) + 'px';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    particlesEl.appendChild(p);
+  }
+
+  // Confetti burst on load
+  setTimeout(() => {
+    for (let i = 0; i < 60; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random() * 100 + '%';
+      c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+      c.style.animationDelay = (Math.random() * 0.5) + 's';
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.width = (Math.random() * 8 + 5) + 'px';
+      c.style.height = (Math.random() * 8 + 5) + 'px';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }
+  }, 500);
+</script>
+
+</body>
+</html>
